@@ -17,8 +17,8 @@ class ofxSimpleMask
         ofRectangle originalMaskArea ;
 		ofShader maskShader;
 
-        void setMask( string maskPath ) ;
-        void setMask( ofImage newMask ) ;
+        void setMask( string maskPath , bool bSetBounds = false ) ;
+        void setMask( ofImage newMask , bool bSetFounds = false ) ;
 
 		void drawMask (  ofTexture contentTex , ofTexture maskTex , float xOffset , float yOffset , float contentAlpha ) ;
 
@@ -27,6 +27,12 @@ class ofxSimpleMask
              static ofxSimpleMask inst ;
              return &inst ;
          }
+    
+        string getDefaultShaderPath( )
+        {
+            string shaderDirectory = ofToDataPath( "../../../../../addons/ofxSimpleMask/shaders/" ) ;
+            return shaderDirectory ;
+        }
 
     protected:
     private:
