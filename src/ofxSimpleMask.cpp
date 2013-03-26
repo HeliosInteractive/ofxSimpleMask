@@ -65,7 +65,7 @@ void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex , float 
 
               //  maskOffset = 0 ; //sin ( ofGetElapsedTimef() ) * 200.0f ;
                 glMultiTexCoord2d(GL_TEXTURE0_ARB, xOffset , yOffset );
-                glMultiTexCoord2d(GL_TEXTURE1_ARB, 0, contentAlpha );
+                glMultiTexCoord2d(GL_TEXTURE1_ARB, 0, 0 );
                 glVertex2f( maskArea.x ,  maskArea.y );
 
 
