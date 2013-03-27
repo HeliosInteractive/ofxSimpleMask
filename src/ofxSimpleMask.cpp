@@ -48,8 +48,8 @@ void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex , float 
 		maskTex.bind();
 
             //prevents weird texture wrapping , otherwise the last or first pixel is repeated to infinity
-            //contentTex.setTextureWrap( GL_CLAMP_TO_BORDER_ARB , GL_CLAMP_TO_BORDER_ARB ) ;
-            contentTex.setTextureWrap( GL_CLAMP , GL_CLAMP ) ;
+            contentTex.setTextureWrap( GL_CLAMP_TO_BORDER_ARB , GL_CLAMP_TO_BORDER_ARB ) ;
+            //contentTex.setTextureWrap( GL_CLAMP , GL_CLAMP ) ;
 
 
             maskShader.begin();
@@ -89,4 +89,52 @@ void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex , float 
 		contentTex.unbind();
 
 		//maskArea = originalMaskArea ;
+}
+
+void ofxSimpleMask::drawScrollingMask( ofTexture content , ofTexture mask , float scrolling , float contentAlpha )
+{
+    
+    content.setTextureWrap( GL_CLAMP_TO_BORDER_ARB , GL_CLAMP_TO_BORDER_ARB ) ;
+    
+    glActiveTexture(GL_TEXTURE0_ARB);
+    content.bind() ;
+    
+    glActiveTexture(GL_TEXTURE1_ARB);
+    mask.bind() ;
+
+    //ofTranslate ( 0 , offset.y + 100 , 0 ) ;
+    
+    //draw a quad the size of the frame
+    glBegin(GL_QUADS);
+    ofFill() ;
+    ofSetColor ( 255 , 255 , 255 , 255 ) ;
+    
+    int fadeMaskOffset = 0 ;
+    
+    //move the mask around with the mouse by modifying the texture coordinates
+    glMultiTexCoord2d(GL_TEXTURE0_ARB, 0, scrolling );
+    glMultiTexCoord2d(GL_TEXTURE1_ARB, 0, 0);
+    glVertex2f( 0 , fadeMaskOffset  );
+    
+    glMultiTexCoord2d(GL_TEXTURE0_ARB, content.getWidth(), scrolling );
+    glMultiTexCoord2d(GL_TEXTURE1_ARB, mask.getWidth(), 0 );
+    glVertex2f(  maskArea.width , fadeMaskOffset );
+    
+    
+    glMultiTexCoord2d(GL_TEXTURE0_ARB, content.getWidth() , mask.getHeight() + scrolling );
+    glMultiTexCoord2d(GL_TEXTURE1_ARB, mask.getWidth() , mask.getHeight() );
+    glVertex2f(  maskArea.width  ,  maskArea.height + fadeMaskOffset );
+    
+    glMultiTexCoord2d(GL_TEXTURE0_ARB, 0, mask.getHeight() + scrolling );
+    glMultiTexCoord2d(GL_TEXTURE1_ARB, 0, mask.getHeight()  );
+    glVertex2f( 0 , maskArea.height + fadeMaskOffset ) ;
+    
+    glEnd();
+    
+    //deactive and clean up
+    glActiveTexture(GL_TEXTURE1_ARB);
+    mask.unbind() ; 
+    
+    glActiveTexture(GL_TEXTURE0_ARB);
+    content.unbind() ;
 }

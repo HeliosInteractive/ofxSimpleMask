@@ -43,7 +43,7 @@ void main (void)
 	vec4 composite = texture2DRect(Tex1, gl_TexCoord[1].st);
 
 	//use the color from the image, but use the r channel of the mask as the alpha channel of our output
-	gl_FragData[0] = vec4(image.rgb, composite.r ) ; //image.a * composite.a );
+	gl_FragData[0] = vec4(image.rgb, composite.r * alpha ) ; //image.a * composite.a );
 
 
 }

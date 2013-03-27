@@ -21,7 +21,7 @@ class ofxSimpleMask
         void setMask( ofImage newMask , bool bSetFounds = false ) ;
 
 		void drawMask (  ofTexture contentTex , ofTexture maskTex , float xOffset , float yOffset , float contentAlpha ) ;
-
+        void drawScrollingMask( ofTexture contextText , ofTexture maskTex , float scrolling , float contentAlpha ) ;    
          static ofxSimpleMask* Instance()
          {
              static ofxSimpleMask inst ;
