@@ -1,5 +1,4 @@
-#ifndef EASYMASK_H
-#define EASYMASK_H
+#pragma once
 
 #include "ofMain.h"
 
@@ -30,6 +29,12 @@ class ofxSimpleMask
     
         string getDefaultShaderPath( )
         {
+            string shaderDirectory = ofToDataPath( "shaders/" ) ;
+            return shaderDirectory ;
+        }
+
+		string getShaderPathToAddons( )
+        {
             string shaderDirectory = ofToDataPath( "../../../../../addons/ofxSimpleMask/shaders/" ) ;
             return shaderDirectory ;
         }
@@ -37,5 +42,3 @@ class ofxSimpleMask
     protected:
     private:
 };
-
-#endif // EASYMASK_H
