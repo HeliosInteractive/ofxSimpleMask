@@ -3,19 +3,35 @@
 ofxSimpleMask::ofxSimpleMask()
 {
     //ctor
+	maskShader = NULL ; 
 }
 
 ofxSimpleMask::~ofxSimpleMask()
 {
     //dtor
+
+	//TODO why does this break 
+	if ( maskShader != NULL && bUseShaderRef == false ) 
+		maskShader = NULL ; 
 }
 
  void ofxSimpleMask::setup( string shaderPath , ofRectangle _area )
  {
-     maskShader.load( shaderPath ) ; //"shaders/composite" ) ;
+	 maskShader = new ofShader() ; 
+     maskShader->load( shaderPath ) ; //"shaders/composite" ) ;
      maskArea = _area ;
      originalMaskArea = _area ;
+	 bUseShaderRef= false ; 
  }
+
+ 
+ void ofxSimpleMask::setup( ofShader * shader)
+ {
+	 maskShader = shader ; 
+	 bUseShaderRef = true ; 
+ }
+
+
 
 void ofxSimpleMask::setMask( string maskPath , bool bSetBounds )
 {
@@ -36,7 +52,8 @@ void ofxSimpleMask::setMask( ofImage newMask , bool bSetBounds )
     }
 }
 
-void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex , float xOffset , float yOffset , float contentAlpha )
+void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex ,
+							   float xOffset , float yOffset , float contentAlpha , float width , float height )
 {
     //BEGIN MASK
     ofEnableAlphaBlending( ) ;
@@ -52,11 +69,11 @@ void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex , float 
             //contentTex.setTextureWrap( GL_CLAMP , GL_CLAMP ) ;
 
 
-            maskShader.begin();
+            maskShader->begin();
 
-                maskShader.setUniformTexture("Tex0", contentTex , 0);
-                maskShader.setUniformTexture("Tex1", maskTex , 1);
-                maskShader.setUniform1f( "alpha" , contentAlpha ) ;
+                maskShader->setUniformTexture("Tex0", contentTex , 0);
+                maskShader->setUniformTexture("Tex1", maskTex , 1);
+                maskShader->setUniform1f( "alpha" , contentAlpha ) ;
                 glBegin(GL_QUADS);
                 ofFill() ;
 
@@ -67,20 +84,20 @@ void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex , float 
 
                 glMultiTexCoord2d(GL_TEXTURE0_ARB, xOffset + contentTex.getWidth(), yOffset );
                 glMultiTexCoord2d(GL_TEXTURE1_ARB, maskTex.getWidth(), 0 );
-                glVertex2f(  maskArea.x + maskArea.width , maskArea.y );
+                glVertex2f(  maskArea.x + width , maskArea.y );
 
 
                 glMultiTexCoord2d(GL_TEXTURE0_ARB, xOffset + contentTex.getWidth() , contentTex.getHeight() + yOffset );
                 glMultiTexCoord2d(GL_TEXTURE1_ARB, maskTex.getWidth() , maskTex.getHeight() );
-                glVertex2f(  maskArea.x + maskArea.width  , maskArea.height + maskArea.y );
+                glVertex2f(  maskArea.x + width  , height + maskArea.y );
 
                 glMultiTexCoord2d(GL_TEXTURE0_ARB, xOffset , contentTex.getHeight() + yOffset );
                 glMultiTexCoord2d(GL_TEXTURE1_ARB, 0, maskTex.getHeight()  );
-                glVertex2f(  maskArea.x , maskArea.height + maskArea.y ) ;
+                glVertex2f(  maskArea.x , height + maskArea.y ) ;
 
                 glEnd();
 
-            maskShader.end() ;
+            maskShader->end() ;
 		//deactive and clean up
 		glActiveTexture(GL_TEXTURE1_ARB);
 		maskTex.unbind();
