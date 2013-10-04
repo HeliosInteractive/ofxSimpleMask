@@ -25,9 +25,11 @@ ofxSimpleMask::~ofxSimpleMask()
  }
 
  
- void ofxSimpleMask::setup( ofShader * shader)
+ void ofxSimpleMask::setup( ofShader * shader , ofRectangle _area )
  {
 	 maskShader = shader ; 
+	 maskArea = _area ;
+     originalMaskArea = _area ;
 	 bUseShaderRef = true ; 
  }
 
@@ -55,6 +57,9 @@ void ofxSimpleMask::setMask( ofImage newMask , bool bSetBounds )
 void ofxSimpleMask::drawMask ( ofTexture contentTex , ofTexture maskTex ,
 							   float xOffset , float yOffset , float contentAlpha , float width , float height )
 {
+
+	if ( width == 0 ) width = maskArea.width ; 
+	if ( height == 0 ) height = maskArea.height ; 
     //BEGIN MASK
     ofEnableAlphaBlending( ) ;
 

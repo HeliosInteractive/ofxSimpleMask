@@ -9,7 +9,7 @@ class ofxSimpleMask
         virtual ~ofxSimpleMask();
 
         void setup( string shaderPath , ofRectangle _area ) ;
-		void setup( ofShader * shader ) ; 
+		void setup( ofShader * shader , ofRectangle _area ) ; 
         
 			//Masking
         ofImage mask ;
@@ -20,7 +20,8 @@ class ofxSimpleMask
         void setMask( string maskPath , bool bSetBounds = false ) ;
         void setMask( ofImage newMask , bool bSetFounds = false ) ;
 
-		void drawMask (  ofTexture contentTex , ofTexture maskTex , float xOffset , float yOffset , float contentAlpha  , float width , float height ) ;
+		void drawMask (  ofTexture contentTex , ofTexture maskTex , float xOffset , float yOffset ,
+						float contentAlpha  , float width = 0.f , float height = 0.f ) ;
         void drawScrollingMask( ofTexture contextText , ofTexture maskTex , float scrolling , float contentAlpha ) ;    
         
 		static ofxSimpleMask* Instance()
